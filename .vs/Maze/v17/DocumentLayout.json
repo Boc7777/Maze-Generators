@@ -7,20 +7,15 @@
       "RelativeMoniker": "D:0:0:{4D90D3AA-34E0-45FA-8205-D79E6F4CFE80}|Maze\\Maze.vcxproj|solutionrelative:Maze\\Maze.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4D90D3AA-34E0-45FA-8205-D79E6F4CFE80}|Maze\\Maze.vcxproj|C:\\Users\\48664\\Desktop\\Maze\\Maze\\Cell.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{4D90D3AA-34E0-45FA-8205-D79E6F4CFE80}|Maze\\Maze.vcxproj|solutionrelative:Maze\\Cell.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{4D90D3AA-34E0-45FA-8205-D79E6F4CFE80}|Maze\\Maze.vcxproj|C:\\Users\\48664\\Desktop\\Maze\\Maze\\Board.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{4D90D3AA-34E0-45FA-8205-D79E6F4CFE80}|Maze\\Maze.vcxproj|solutionrelative:Maze\\Board.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4D90D3AA-34E0-45FA-8205-D79E6F4CFE80}|Maze\\Maze.vcxproj|C:\\Users\\48664\\Desktop\\Maze\\Maze\\Board.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{4D90D3AA-34E0-45FA-8205-D79E6F4CFE80}|Maze\\Maze.vcxproj|solutionrelative:Maze\\Board.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4D90D3AA-34E0-45FA-8205-D79E6F4CFE80}|Maze\\Maze.vcxproj|C:\\Users\\48664\\Desktop\\Maze\\Maze\\Board.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{4D90D3AA-34E0-45FA-8205-D79E6F4CFE80}|Maze\\Maze.vcxproj|solutionrelative:Maze\\Board.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4D90D3AA-34E0-45FA-8205-D79E6F4CFE80}|Maze\\Maze.vcxproj|C:\\Users\\48664\\Desktop\\Maze\\Maze\\Cell.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{4D90D3AA-34E0-45FA-8205-D79E6F4CFE80}|Maze\\Maze.vcxproj|solutionrelative:Maze\\Cell.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\48664\\Desktop\\tetris\\tetris\\tetris.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,43 +25,30 @@
       "DocumentGroups": [
         {
           "DockedWidth": 342,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Cell.cpp",
-              "DocumentMoniker": "C:\\Users\\48664\\Desktop\\Maze\\Maze\\Cell.cpp",
-              "RelativeDocumentMoniker": "Maze\\Cell.cpp",
-              "ToolTip": "C:\\Users\\48664\\Desktop\\Maze\\Maze\\Cell.cpp",
-              "RelativeToolTip": "Maze\\Cell.cpp",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAACIAAAAAAAAA",
+              "DocumentIndex": 3,
+              "Title": "tetris.cpp",
+              "DocumentMoniker": "C:\\Users\\48664\\Desktop\\tetris\\tetris\\tetris.cpp",
+              "RelativeDocumentMoniker": "..\\tetris\\tetris\\tetris.cpp",
+              "ToolTip": "C:\\Users\\48664\\Desktop\\tetris\\tetris\\tetris.cpp",
+              "RelativeToolTip": "..\\tetris\\tetris\\tetris.cpp",
+              "ViewState": "AQIAAJgAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-08-17T20:14:22.297Z",
+              "WhenOpened": "2024-08-18T13:40:26.885Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Cell.h",
-              "DocumentMoniker": "C:\\Users\\48664\\Desktop\\Maze\\Maze\\Cell.h",
-              "RelativeDocumentMoniker": "Maze\\Cell.h",
-              "ToolTip": "C:\\Users\\48664\\Desktop\\Maze\\Maze\\Cell.h",
-              "RelativeToolTip": "Maze\\Cell.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAANAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-08-17T20:14:19.158Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "Board.cpp",
               "DocumentMoniker": "C:\\Users\\48664\\Desktop\\Maze\\Maze\\Board.cpp",
               "RelativeDocumentMoniker": "Maze\\Board.cpp",
               "ToolTip": "C:\\Users\\48664\\Desktop\\Maze\\Maze\\Board.cpp",
               "RelativeToolTip": "Maze\\Board.cpp",
-              "ViewState": "AQIAAAQAAAAAAAAAAAAmwDUAAAAAAAAA",
+              "ViewState": "AQIAAAUAAAAAAAAAAAAAAIUAAAATAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-08-16T09:21:58.798Z",
               "EditorCaption": ""
@@ -79,7 +61,7 @@
               "RelativeDocumentMoniker": "Maze\\Board.h",
               "ToolTip": "C:\\Users\\48664\\Desktop\\Maze\\Maze\\Board.h",
               "RelativeToolTip": "Maze\\Board.h",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAAAB4AAAAgAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAsAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-08-16T09:21:55.573Z",
               "EditorCaption": ""
@@ -92,7 +74,7 @@
               "RelativeDocumentMoniker": "Maze\\Maze.cpp",
               "ToolTip": "C:\\Users\\48664\\Desktop\\Maze\\Maze\\Maze.cpp",
               "RelativeToolTip": "Maze\\Maze.cpp",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAAAwAAAAAAAAA",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAAACUAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-08-16T08:54:04.483Z",
               "EditorCaption": ""
