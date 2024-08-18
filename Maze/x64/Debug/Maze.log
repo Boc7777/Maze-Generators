@@ -1,0 +1,8 @@
+﻿  Board.cpp
+C:\Users\48664\Desktop\Maze\Maze\Board.cpp(23,25): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+C:\Users\48664\Desktop\Maze\Maze\Board.cpp(23,23): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+  Maze.cpp
+C:\Users\48664\Desktop\Maze\Maze\Maze.cpp(15,24): warning C4244: "inicjowanie": konwersja z "float" do "unsigned int", możliwa utrata danych
+C:\Users\48664\Desktop\Maze\Maze\Maze.cpp(16,25): warning C4244: "inicjowanie": konwersja z "float" do "unsigned int", możliwa utrata danych
+  Generowanie kodu...
+  Maze.vcxproj -> C:\Users\48664\Desktop\Maze\x64\Debug\Maze.exe
