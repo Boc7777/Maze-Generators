@@ -28,8 +28,8 @@ Board::Board(float cell_size, int board_width, int board_height, RenderWindow* w
 		row.clear();
 	}
 	srand(time(0));
-	int x = rand() % board_width;
-	int y = rand() % board_height;
+	int x = (rand() % (board_width-2))+2;
+	int y = (rand() % (board_height-2))+2;
 	if (x % 2 == 0) {
 		x -= 1;
 	}
@@ -55,7 +55,8 @@ bool Board::getGeneratingStatus() {
 }
 
 
-vector<Direction> Board::Check_Count_Neighbours(int x, int y) {
+//universal functions 
+vector<Direction> Board::Check_Drawed_Around(int x, int y) {
 	vector<Direction> tab;
 	//lewo
 	if (x > 1) {
@@ -118,20 +119,34 @@ vector<Direction> Board::Check_Space_around(int x, int y) {
 void Board::Build_Bridge(int x, int y, Direction dir) {
 	if (dir == Left) {
 		cell_tab[y][x - 1].setStatus(Drawed);
+		cell_tab[y][x - 2].setStatus(Drawed);
+		Update_Head(&cell_tab[y][x - 2]);
 	}
 	else if (dir == Right) {
 		cell_tab[y][x + 1].setStatus(Drawed);
+		cell_tab[y][x + 2].setStatus(Drawed);
+		Update_Head(&cell_tab[y][x + 2]);
 	}
 	else if (dir == Top) {
 		cell_tab[y - 1][x].setStatus(Drawed);
+		cell_tab[y - 2][x].setStatus(Drawed);
+		Update_Head(&cell_tab[y - 2][x]);
 	}
 	else if (dir == Bottom) {
 		cell_tab[y + 1][x].setStatus(Drawed);
+		cell_tab[y + 2][x].setStatus(Drawed);
+		Update_Head(&cell_tab[y + 2][x]);
 	}
 }
 
+void Board::Update_Head(Cell* cell) {
+	head_hak = cell;
+}
 
-//Prim's algorythym
+
+
+
+//Prim
 void Board::Prim_CreateMaze(int cells_in_iteration) {
 
 	Refresh_Neighbour_Cells();
@@ -161,22 +176,11 @@ void Board::Prim_CreateMaze(int cells_in_iteration) {
 			int cell_x = neighbours_cells[random]->getCoords().first;
 			int cell_y = neighbours_cells[random]->getCoords().second;
 
-			vector<Direction> Dir_tab = Check_Count_Neighbours(cell_x, cell_y);
+			vector<Direction> Dir_tab = Check_Drawed_Around(cell_x, cell_y);
 			int randomDir = rand() % Dir_tab.size();
 			Direction Choosen_Dir = Dir_tab[randomDir];
 
-			if (Choosen_Dir == Left) {
-				cell_tab[cell_y][cell_x - 1].setStatus(Drawed);
-			}
-			else if (Choosen_Dir == Right) {
-				cell_tab[cell_y][cell_x + 1].setStatus(Drawed);
-			}
-			else if (Choosen_Dir == Top) {
-				cell_tab[cell_y - 1][cell_x].setStatus(Drawed);
-			}
-			else if (Choosen_Dir == Bottom) {
-				cell_tab[cell_y + 1][cell_x].setStatus(Drawed);
-			}
+			Build_Bridge(cell_x, cell_y, Choosen_Dir);
 		}
 	}
 
@@ -194,7 +198,7 @@ void Board::Refresh_Neighbour_Cells() {
 			int y = cell.getCoords().second;
 			if (cell_tab[y][x].getStatus() != Drawed) {
 				if (x % 2 == 1 && y % 2 == 1) {
-					if (Check_Count_Neighbours(x, y).size() > 0 && (cell_tab[y][x].getStatus() == Other || cell_tab[y][x].getStatus() == Neighbour)) {
+					if (Check_Drawed_Around(x, y).size() > 0 && (cell_tab[y][x].getStatus() == Other || cell_tab[y][x].getStatus() == Neighbour)) {
 						cell.setStatus(Neighbour);
 						neighbours_cells.push_back(&cell);
 					}
@@ -207,7 +211,7 @@ void Board::Refresh_Neighbour_Cells() {
 
 
 
-//Hunt and Kill algorythym
+//Hunt and Kill
 void Board::Hunt_and_Kill_CreateMaze() {
 	int cell_x = head_hak->getCoords().first;
 	int cell_y = head_hak->getCoords().second;
@@ -218,29 +222,7 @@ void Board::Hunt_and_Kill_CreateMaze() {
 		Direction Choosen_Dir = Dir_tab[randomDir];
 
 		
-		if (Choosen_Dir == Left) {
-			cell_tab[cell_y][cell_x - 1].setStatus(Drawed);
-			cell_tab[cell_y][cell_x - 2].setStatus(Drawed);
-			head_hak = &cell_tab[cell_y][cell_x - 2];
-		}
-
-		else if (Choosen_Dir == Right) {
-			cell_tab[cell_y][cell_x + 1].setStatus(Drawed);
-			cell_tab[cell_y][cell_x + 2].setStatus(Drawed);
-			head_hak = &cell_tab[cell_y][cell_x + 2];
-		}
-
-		else if (Choosen_Dir == Top) {
-			cell_tab[cell_y - 1][cell_x].setStatus(Drawed);
-			cell_tab[cell_y - 2][cell_x].setStatus(Drawed);
-			head_hak = &cell_tab[cell_y - 2][cell_x];
-		}
-
-		else if (Choosen_Dir == Bottom) {
-			cell_tab[cell_y + 1][cell_x].setStatus(Drawed);
-			cell_tab[cell_y + 2][cell_x].setStatus(Drawed);
-			head_hak = &cell_tab[cell_y + 2][cell_x];
-		}
+		Build_Bridge(cell_x, cell_y, Choosen_Dir);
 	}
 	else {
 		Find_Head();
@@ -254,11 +236,12 @@ void Board::Find_Head() {
 			if (!found) {
 				int cell_x = cell.getCoords().first;
 				int cell_y = cell.getCoords().second;
-				vector<Direction> Dir_tab = Check_Count_Neighbours(cell_x, cell_y);
+				vector<Direction> Dir_tab = Check_Drawed_Around(cell_x, cell_y);
 				if (Dir_tab.size() > 0 && cell_x % 2 == 1 && cell_y % 2 == 1 && cell_tab[cell_y][cell_x].getStatus() == Other) {
 
-					cell_tab[cell_y][cell_x].setStatus(Drawed);
-					head_hak = &cell_tab[cell_y][cell_x];
+					/*cell_tab[cell_y][cell_x].setStatus(Drawed);*/
+
+					Update_Head(&cell);
 
 					//connect to main branch
 					int randomDir = rand() % Dir_tab.size();
@@ -273,5 +256,84 @@ void Board::Find_Head() {
 	}
 	if (!found) {
 		generating = false;
+	}
+}
+
+
+
+//Recursive Backtracking
+void Board::Recursive_Backtracking_CreateMaze() {
+	int cell_x = head_hak->getCoords().first;
+	int cell_y = head_hak->getCoords().second;
+	vector<Direction> Dir_tab = Check_Space_around(cell_x, cell_y);
+
+	if (Dir_tab.size() > 0) {
+		int randomDir = rand() % Dir_tab.size();
+		Direction Choosen_Dir = Dir_tab[randomDir];
+		
+
+	
+		if (Choosen_Dir == Left) {
+			cell_tab[cell_y][cell_x - 1].setStatus(Neighbour);
+			cell_tab[cell_y][cell_x - 2].setStatus(Neighbour);
+
+			neighbours_cells.push_back(&cell_tab[cell_y][cell_x - 1]);
+			neighbours_cells.push_back(&cell_tab[cell_y][cell_x - 2]);
+
+			Update_Head(&cell_tab[cell_y][cell_x - 2]);
+		}
+		else if (Choosen_Dir == Right) {
+			cell_tab[cell_y][cell_x + 1].setStatus(Neighbour);
+			cell_tab[cell_y][cell_x + 2].setStatus(Neighbour);
+
+			neighbours_cells.push_back(&cell_tab[cell_y][cell_x + 1]);
+			neighbours_cells.push_back(&cell_tab[cell_y][cell_x + 2]);
+
+			Update_Head(&cell_tab[cell_y][cell_x + 2]);
+		}
+		else if (Choosen_Dir == Top) {
+			cell_tab[cell_y - 1][cell_x].setStatus(Neighbour);
+			cell_tab[cell_y - 2][cell_x].setStatus(Neighbour);
+
+			neighbours_cells.push_back(&cell_tab[cell_y - 1][cell_x]);
+			neighbours_cells.push_back(&cell_tab[cell_y - 2][cell_x]);
+
+			Update_Head(&cell_tab[cell_y - 2][cell_x]);
+		}
+		else if (Choosen_Dir == Bottom) {
+			cell_tab[cell_y + 1][cell_x].setStatus(Neighbour);
+			cell_tab[cell_y + 2][cell_x].setStatus(Neighbour);
+
+			neighbours_cells.push_back(&cell_tab[cell_y + 1][cell_x]);
+			neighbours_cells.push_back(&cell_tab[cell_y + 2][cell_x]);
+
+			Update_Head(&cell_tab[cell_y + 2][cell_x]);
+		}
+
+		
+	}
+
+	else {
+		if (neighbours_cells.size() > 0) {
+			Cell* last_cell = neighbours_cells[neighbours_cells.size() - 1];
+			Cell* last_bridge = neighbours_cells[neighbours_cells.size() - 2];
+
+			head_hak->setStatus(Drawed);
+			last_cell->setStatus(Drawed);
+			last_bridge->setStatus(Drawed);
+
+
+			if (Check_Space_around(last_cell->getCoords().first, last_cell->getCoords().second).size() > 0) {
+				Update_Head(last_cell);
+			}
+			else {
+				neighbours_cells.pop_back();
+				neighbours_cells.pop_back();
+			}
+		}
+		else {
+			generating = false;
+		}
+
 	}
 }

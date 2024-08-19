@@ -24,9 +24,10 @@ void Cell::setStatus(Status status) {
 	else if (status == Neighbour) {
 		this->shape.setFillColor(Color::Red);
 	}
-	else {
+	else if(status == Other){
 		this->shape.setFillColor(Color::Black);
 	}
+
 }
 
 pair<int, int> Cell::getCoords() {

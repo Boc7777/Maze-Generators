@@ -23,11 +23,16 @@ public:
 
 	void Prim_CreateMaze(int cells_in_iteration);
 	void Hunt_and_Kill_CreateMaze();
+	void Recursive_Backtracking_CreateMaze();
+	
 
 private:
-	vector<Direction> Check_Count_Neighbours(int x, int y);
+
+	//universal functions
+	vector<Direction> Check_Drawed_Around(int x, int y);
 	vector<Direction> Check_Space_around(int x, int y);
 	void Build_Bridge(int x, int y, Direction dir);
+	void Update_Head(Cell* cell);
 
 
 	//Prim algorythym
@@ -35,6 +40,9 @@ private:
 
 	//Hunt and Kill algorythym 
 	void Find_Head();
+
+	//Recursive_Backtracking
+
 
 
 	

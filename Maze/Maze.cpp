@@ -7,9 +7,9 @@ using namespace std;
 using namespace sf;
 
 
-const float cell_size = 5.f;
-const int width_in_cells = 50;
-const int height_in_cells = 50;
+const float cell_size = 15.f;
+const int width_in_cells = 60;
+const int height_in_cells = 60;
 
 
 unsigned display_width = cell_size * width_in_cells;
@@ -18,7 +18,7 @@ unsigned display_height = cell_size * height_in_cells;
 int main()
 {
     RenderWindow window(VideoMode(display_width, display_height), "Maze");
-    /*window.setFramerateLimit(10);*/
+   /* window.setFramerateLimit(10);*/
     
     Event event;
     Board board(cell_size, width_in_cells, height_in_cells, &window);
@@ -33,8 +33,9 @@ int main()
         if (board.getGeneratingStatus()) {
             
             //ALGORITHMS
-            /*board.Prim_CreateMaze(5);*/
-            board.Hunt_and_Kill_CreateMaze();
+            //board.Prim_CreateMaze(5);
+            //board.Hunt_and_Kill_CreateMaze();
+            board.Recursive_Backtracking_CreateMaze();
 
             //TIMER
             cout << time.asMilliseconds() / 1000.0f << endl;
