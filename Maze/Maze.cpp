@@ -18,7 +18,7 @@ unsigned display_height = cell_size * height_in_cells;
 int main()
 {
     RenderWindow window(VideoMode(display_width, display_height), "Maze");
-   /* window.setFramerateLimit(10);*/
+    /*window.setFramerateLimit(2);*/
     
     Event event;
     Board board(cell_size, width_in_cells, height_in_cells, &window);
@@ -33,9 +33,12 @@ int main()
         if (board.getGeneratingStatus()) {
             
             //ALGORITHMS
+            // 
             //board.Prim_CreateMaze(5);
             //board.Hunt_and_Kill_CreateMaze();
-            board.Recursive_Backtracking_CreateMaze();
+            //board.Recursive_Backtracking_CreateMaze();
+            board.Wilson_CreateMaze();
+
 
             //TIMER
             cout << time.asMilliseconds() / 1000.0f << endl;

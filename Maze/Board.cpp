@@ -337,3 +337,99 @@ void Board::Recursive_Backtracking_CreateMaze() {
 
 	}
 }
+
+
+
+//Wilson
+void Board::Wilson_CreateMaze() {
+	//is empty
+	if (!HeadFoundMaze){
+		Random_Path_Generate();
+
+	}
+	else{}
+}
+
+void Board::Random_Path_Generate() {
+	if (tail_wil.first == -1 && tail_wil.second == -1) {
+		int found = false;
+		while (!found) {
+			int x = rand() % board_width;
+			int y = rand() % board_height;
+			if (cell_tab[y][x].getStatus() == Other && x % 2 == 1 && y % 2 == 1) {
+				found = true;
+				tail_wil = make_pair(x, y);
+				head_wil = tail_wil;
+			}
+
+		}
+	}
+	else {
+
+		int x = head_wil.first;
+		int y = head_wil.second;
+
+
+		if (cell_tab[y][x].getStatus() != Drawed) {
+
+			vector<Direction> Dir_tab = Check_Random_Directions(x, y);
+			int randomDir = rand() % Dir_tab.size();
+			Direction Choosen_Dir = Dir_tab[randomDir];
+
+			/*Directions_Map[y][x] = Choosen_Dir;*/
+
+			if (Choosen_Dir == Left) {
+				cell_tab[y][x - 1].setStatus(Neighbour);
+				cell_tab[y][x - 2].setStatus(Neighbour);
+
+				head_wil = make_pair(y, x - 2);
+			}
+			else if (Choosen_Dir == Right) {
+				cell_tab[y][x + 1].setStatus(Neighbour);
+				cell_tab[y][x + 2].setStatus(Neighbour);
+
+
+				head_wil = make_pair(y, x + 2);
+			}
+			else if (Choosen_Dir == Top) {
+				cell_tab[y - 1][x].setStatus(Neighbour);
+				cell_tab[y - 2][x].setStatus(Neighbour);
+
+				head_wil = make_pair(y - 2, x);
+			}
+			else if (Choosen_Dir == Bottom) {
+				cell_tab[y + 1][x].setStatus(Neighbour);
+				cell_tab[y + 2][x].setStatus(Neighbour);
+
+				head_wil = make_pair(y + 2, x);
+			}
+		}
+
+		
+	}
+
+}
+
+
+vector<Direction> Board::Check_Random_Directions(int x, int y) {
+	vector<Direction> tab;
+	//lewo
+	if (x > 1) {
+			tab.push_back(Left);
+	}
+	//prawo
+	if (x < board_width - 2) {
+			tab.push_back(Right);
+	}
+	//gora
+	if (y > 1) {	
+			tab.push_back(Top);
+	}
+	//dol
+	if (y < board_height - 2) {
+			tab.push_back(Bottom);
+	}
+
+	return tab;
+}
+

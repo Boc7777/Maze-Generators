@@ -24,6 +24,7 @@ public:
 	void Prim_CreateMaze(int cells_in_iteration);
 	void Hunt_and_Kill_CreateMaze();
 	void Recursive_Backtracking_CreateMaze();
+	void Wilson_CreateMaze();
 	
 
 private:
@@ -44,7 +45,9 @@ private:
 	//Recursive_Backtracking
 
 
-
+	//Wilson
+	void Random_Path_Generate();
+	vector<Direction> Check_Random_Directions(int x, int y);
 	
 
 	vector<vector<Cell>> cell_tab;
@@ -56,7 +59,14 @@ private:
 	int board_width;
 	int board_height;
 
-	//Hunt and Kill
+	//Hunt and Kill 
 	Cell* head_hak;
+
+	//Wilson
+	vector<vector<Direction>> Directions_Map;
+	pair<int, int> head_wil = make_pair(-1,-1);
+	pair<int,int> tail_wil = make_pair(-1,-1);
+	bool HeadFoundMaze = false;
+	
 };
 
