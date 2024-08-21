@@ -143,6 +143,17 @@ void Board::Update_Head(Cell* cell) {
 	head_hak = cell;
 }
 
+bool Board::Check_End_Generating() {
+	for (int y = 0;y < board_height;y++) {
+		for (int x = 0;x < board_width;x++) {
+			if (cell_tab[y][x].getStatus() == Other && x%2==1&&y%2==1) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 
 
 
@@ -347,28 +358,82 @@ void Board::Wilson_CreateMaze() {
 		Random_Path_Generate();
 
 	}
-	else{}
+	else{
+		
+
+		Direction Dir_tail = Directions_Map[tail_wil.second][tail_wil.first];
+		int tail_x = tail_wil.first;
+		int tail_y = tail_wil.second;
+
+		if (tail_x == head_wil.first && tail_y == head_wil.second) {
+			HeadFoundMaze = false;
+			tail_wil = make_pair(-1, -1);
+			Directions_Map.clear();
+		}
+
+
+		cell_tab[tail_y][tail_x].setStatus(Drawed);
+		Build_Bridge(tail_x, tail_y, Dir_tail);
+		if (Dir_tail == Left) {
+			tail_wil = make_pair(tail_x - 2, tail_y);
+		}
+		else if (Dir_tail == Right) {
+			tail_wil = make_pair(tail_x + 2, tail_y);
+		}
+		else if (Dir_tail == Top) {
+			tail_wil = make_pair(tail_x, tail_y-2);
+		}
+		else if (Dir_tail == Bottom) {
+			tail_wil = make_pair(tail_x , tail_y+2);
+		}
+		
+	
+	
+	}
 }
 
 void Board::Random_Path_Generate() {
+	//tail isn't chosen
 	if (tail_wil.first == -1 && tail_wil.second == -1) {
+		ClearNeighbour();
+
 		int found = false;
 		while (!found) {
-			int x = rand() % board_width;
-			int y = rand() % board_height;
-			if (cell_tab[y][x].getStatus() == Other && x % 2 == 1 && y % 2 == 1) {
+			if (Check_End_Generating()) {
+				generating = false;
 				found = true;
-				tail_wil = make_pair(x, y);
-				head_wil = tail_wil;
+			}
+			else {
+				int x = rand() % board_width;
+				int y = rand() % board_height;
+				if (cell_tab[y][x].getStatus() == Other && x % 2 == 1 && y % 2 == 1) {
+					found = true;
+					tail_wil = make_pair(x, y);
+					head_wil = tail_wil;
+				}
 			}
 
 		}
+
+		for (int y = 0;y < board_height;y++) {
+			vector<Direction> row;
+			for (int x = 0;x < board_width;x++) {
+				row.push_back(Nothing);
+			}
+			Directions_Map.push_back(row);
+		}
+
+
+
 	}
+	
+	//random generating 
 	else {
 
 		int x = head_wil.first;
 		int y = head_wil.second;
 
+		cell_tab[y][x].setStatus(Head);
 
 		if (cell_tab[y][x].getStatus() != Drawed) {
 
@@ -376,40 +441,52 @@ void Board::Random_Path_Generate() {
 			int randomDir = rand() % Dir_tab.size();
 			Direction Choosen_Dir = Dir_tab[randomDir];
 
-			/*Directions_Map[y][x] = Choosen_Dir;*/
+			cell_tab[y][x].setStatus(Neighbour);
+			Directions_Map[y][x] = Choosen_Dir;
+
+			int new_x = x;
+			int new_y = y;
 
 			if (Choosen_Dir == Left) {
-				cell_tab[y][x - 1].setStatus(Neighbour);
-				cell_tab[y][x - 2].setStatus(Neighbour);
+				new_x = x - 2;
+				new_y = y;
 
-				head_wil = make_pair(y, x - 2);
+				cell_tab[y][x - 1].setStatus(Neighbour);
+				
 			}
 			else if (Choosen_Dir == Right) {
+				new_x = x + 2;
+				new_y = y;
+
 				cell_tab[y][x + 1].setStatus(Neighbour);
-				cell_tab[y][x + 2].setStatus(Neighbour);
-
-
-				head_wil = make_pair(y, x + 2);
+				
 			}
 			else if (Choosen_Dir == Top) {
-				cell_tab[y - 1][x].setStatus(Neighbour);
-				cell_tab[y - 2][x].setStatus(Neighbour);
+				new_x = x;
+				new_y = y-2;
 
-				head_wil = make_pair(y - 2, x);
+				cell_tab[y - 1][x].setStatus(Neighbour);
+				
 			}
 			else if (Choosen_Dir == Bottom) {
+				new_x = x;
+				new_y = y+2;
+
 				cell_tab[y + 1][x].setStatus(Neighbour);
-				cell_tab[y + 2][x].setStatus(Neighbour);
 
-				head_wil = make_pair(y + 2, x);
 			}
-		}
 
-		
+
+			if (cell_tab[new_y][new_x].getStatus() == Drawed) {
+				HeadFoundMaze = true;
+			}
+			cell_tab[new_y][new_x].setStatus(Head);
+			head_wil = make_pair(new_x, new_y);
+
+		}
 	}
 
 }
-
 
 vector<Direction> Board::Check_Random_Directions(int x, int y) {
 	vector<Direction> tab;
@@ -431,5 +508,16 @@ vector<Direction> Board::Check_Random_Directions(int x, int y) {
 	}
 
 	return tab;
+}
+
+void Board::ClearNeighbour() {
+	for (int y = 0;y < board_height;y++) {
+		for (int x = 0;x < board_width;x++) {
+			if (cell_tab[y][x].getStatus() == Neighbour) {
+				cell_tab[y][x].setStatus(Other);
+			}
+
+		}
+	}
 }
 

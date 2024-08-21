@@ -27,6 +27,9 @@ void Cell::setStatus(Status status) {
 	else if(status == Other){
 		this->shape.setFillColor(Color::Black);
 	}
+	else {
+		this->shape.setFillColor(Color::Green);
+	}
 
 }
 

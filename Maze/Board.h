@@ -10,7 +10,8 @@ enum Direction {
 	Left,
 	Right,
 	Top,
-	Bottom
+	Bottom,
+	Nothing
 };
 
 class Board
@@ -34,6 +35,7 @@ private:
 	vector<Direction> Check_Space_around(int x, int y);
 	void Build_Bridge(int x, int y, Direction dir);
 	void Update_Head(Cell* cell);
+	bool Check_End_Generating();
 
 
 	//Prim algorythym
@@ -48,6 +50,8 @@ private:
 	//Wilson
 	void Random_Path_Generate();
 	vector<Direction> Check_Random_Directions(int x, int y);
+	void ClearNeighbour();
+
 	
 
 	vector<vector<Cell>> cell_tab;
