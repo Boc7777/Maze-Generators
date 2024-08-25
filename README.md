@@ -26,3 +26,14 @@ https://github.com/user-attachments/assets/81f32ab1-fab5-4c7f-9af4-e1f25b152680
 
 
 
+Kruskal's Algorithm <br> 
+
+https://github.com/user-attachments/assets/02ac31d1-d12d-46c7-9ff3-058c45667d17
+
+
+
+
+
+
+
+
