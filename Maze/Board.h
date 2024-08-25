@@ -18,7 +18,12 @@ class Board
 {
 public: 
 	Board(float cell_size, int board_width, int board_height, RenderWindow* window);
+	
 	void DrawBoard();
+	//Kruskal Sets
+	void DrawSets();
+
+
 	bool getGeneratingStatus();
 
 
@@ -26,6 +31,7 @@ public:
 	void Hunt_and_Kill_CreateMaze();
 	void Recursive_Backtracking_CreateMaze();
 	void Wilson_CreateMaze();
+	void Kruskal_CreateMaze();
 	
 
 private:
@@ -36,6 +42,7 @@ private:
 	void Build_Bridge(int x, int y, Direction dir);
 	void Update_Head(Cell* cell);
 	bool Check_End_Generating();
+	void Draw_Random_Cell();
 
 
 	//Prim algorythym
@@ -44,15 +51,19 @@ private:
 	//Hunt and Kill algorythym 
 	void Find_Head();
 
-	//Recursive_Backtracking
-
-
 	//Wilson
-	void Random_Path_Generate();
-	vector<Direction> Check_Random_Directions(int x, int y);
-	void ClearNeighbour();
+		void Random_Path_Generate();
+		vector<Direction> Check_Random_Directions(int x, int y);
+		void ClearNeighbour();
 
-	
+	//Kruskal
+		void Build_Sets_tab();
+		void Build_Bridge_Kruskal(int x,int y);
+		string Get_String_from_sets(int x,int y);
+		bool Should_end_generating_Kruskal();
+		void Recursion_Changing_set(int x, int y, string winner);
+
+
 
 	vector<vector<Cell>> cell_tab;
 	vector<Cell*> neighbours_cells;
@@ -71,6 +82,16 @@ private:
 	pair<int, int> head_wil = make_pair(-1,-1);
 	pair<int,int> tail_wil = make_pair(-1,-1);
 	bool HeadFoundMaze = false;
+
+
+	//Kruskal
+	Font font;
+	vector<vector<Text>> sets_tab;
+	vector<Cell*> walls_tab;
+	int lastset = 0;
+	
+
+
 	
 };
 

@@ -1,6 +1,7 @@
 #include "Board.h"
 #include <iostream>
 #include "Cell.h"
+#include <string>
 
 using namespace std;
 
@@ -17,8 +18,8 @@ Board::Board(float cell_size, int board_width, int board_height, RenderWindow* w
 	this->board_height = board_height;
 	this->window = window;
 
+	font.loadFromFile("czcionka.ttf");
 	
-
 	for (int y = 0;y < board_height;y++) {
 		vector<Cell> row;
 		for (int x = 0; x < board_width;x++) {
@@ -27,19 +28,19 @@ Board::Board(float cell_size, int board_width, int board_height, RenderWindow* w
 		cell_tab.push_back(row);
 		row.clear();
 	}
+
+	Build_Sets_tab();
+
 	srand(time(0));
-	int x = (rand() % (board_width-2))+2;
-	int y = (rand() % (board_height-2))+2;
-	if (x % 2 == 0) {
-		x -= 1;
-	}
-	if (y % 2 == 0) {
-		y -= 1;
-	}
 
-	cell_tab[y][x].setStatus(Drawed);
-
-	head_hak = &cell_tab[y][x];
+	Draw_Random_Cell();
+	/*for (int y = 0;y < board_height;y++) {
+		for (int x = 0; x < board_width;x++) {
+			if (x % 2 == 1 && y % 2 == 1) {
+				cell_tab[y][x].setStatus(Drawed);
+			}
+		}
+	}*/
 }
 
 void Board::DrawBoard() {
@@ -152,6 +153,21 @@ bool Board::Check_End_Generating() {
 		}
 	}
 	return true;
+}
+
+void Board::Draw_Random_Cell() {
+	int x = (rand() % (board_width - 2)) + 2;
+	int y = (rand() % (board_height - 2)) + 2;
+	if (x % 2 == 0) {
+		x -= 1;
+	}
+	if (y % 2 == 0) {
+		y -= 1;
+	}
+
+	cell_tab[y][x].setStatus(Drawed);
+
+	head_hak = &cell_tab[y][x];
 }
 
 
@@ -272,6 +288,7 @@ void Board::Find_Head() {
 
 
 
+
 //Recursive Backtracking
 void Board::Recursive_Backtracking_CreateMaze() {
 	int cell_x = head_hak->getCoords().first;
@@ -348,6 +365,7 @@ void Board::Recursive_Backtracking_CreateMaze() {
 
 	}
 }
+
 
 
 
@@ -521,3 +539,200 @@ void Board::ClearNeighbour() {
 	}
 }
 
+
+
+
+//Kruskal
+void Board::Kruskal_CreateMaze() {
+	if (walls_tab.size() > 0) {
+		int random = rand() % walls_tab.size();
+
+		int x = walls_tab[random]->getCoords().first;
+		int y = walls_tab[random]->getCoords().second;
+
+		Build_Bridge_Kruskal(x, y);
+
+		walls_tab.erase(walls_tab.begin() + random);
+	}
+	Should_end_generating_Kruskal();
+	
+}
+
+string Board::Get_String_from_sets(int x, int y) {
+	return sets_tab[y][x].getString().toAnsiString();
+}
+
+void Board::DrawSets() {
+	for (auto& set_row : sets_tab) {
+		for (auto& set : set_row) {
+			set.setOrigin(set.getLocalBounds().width / 2, set.getLocalBounds().height / 2);
+			window->draw(set);
+		}
+	}
+}
+
+void Board::Build_Sets_tab() {
+	//creating sets_tab  = empty texts
+	for (int y = 0;y < board_height;y++) {
+		vector<Text> row;
+		for (int x = 0;x < board_width;x++) {
+			Text text;
+			text.setFont(font);
+			text.setCharacterSize(cell_size / 2);
+			text.setFillColor(Color::Red);
+			text.setPosition(Vector2f(x * cell_size + (0.5 * cell_size), y * cell_size + (0.5 * cell_size)));
+
+			text.setString("");
+			row.push_back(text);
+		}
+		sets_tab.push_back(row);
+	}
+
+	//create list of all walls
+	int a=0; 
+	int b=0;
+	if (board_width % 2 == 1) {
+		a = 1;
+	}
+	if (board_height % 2 == 1) {
+		b = 1;
+	}
+
+	for (int y = 0; y < board_height;y++) {
+		for (int x = 0;x < board_width;x++) {
+			if (((x % 2 == 0 && y % 2 == 1) || (x % 2 == 1 && y % 2 == 0)) && x > 0 && x < board_width-a && y>0 && y < board_height-b) {
+				walls_tab.push_back(&cell_tab[y][x]);
+			}
+		}
+	}
+	
+}
+
+void Board::Build_Bridge_Kruskal(int x, int y) {
+	//vertically
+	if (y % 2 == 0) {
+		if (Get_String_from_sets(x, y - 1) == "" && Get_String_from_sets(x, y + 1) == "") {
+			cell_tab[y][x].setStatus(Drawed);
+			cell_tab[y-1][x].setStatus(Drawed);
+			cell_tab[y+1][x].setStatus(Drawed);
+
+			lastset += 1;
+			sets_tab[y][x].setString(to_string(lastset));
+			sets_tab[y-1][x].setString(to_string(lastset));
+			sets_tab[y+1][x].setString(to_string(lastset));
+		}
+
+		else if (Get_String_from_sets(x, y - 1) == "" || Get_String_from_sets(x, y + 1) == "") {
+			cell_tab[y][x].setStatus(Drawed);
+			cell_tab[y - 1][x].setStatus(Drawed);
+			cell_tab[y + 1][x].setStatus(Drawed);
+
+			string str;
+			if (Get_String_from_sets(x, y - 1) == "") {
+				str = Get_String_from_sets(x, y + 1);
+			}
+			else {
+				str = Get_String_from_sets(x, y - 1);
+			}
+			
+			sets_tab[y][x].setString(str);
+			sets_tab[y - 1][x].setString(str);
+			sets_tab[y + 1][x].setString(str);
+		}
+
+		else if (Get_String_from_sets(x, y - 1) != Get_String_from_sets(x, y + 1)) {
+			string winner = (stoi(Get_String_from_sets(x, y - 1)) < stoi(Get_String_from_sets(x, y + 1)) ? Get_String_from_sets(x, y - 1) : Get_String_from_sets(x, y + 1));
+			
+			sets_tab[y][x].setString("*");
+			cell_tab[y][x].setStatus(Drawed);
+
+			Recursion_Changing_set(x, y, winner);
+		}
+
+		
+	}
+	//horizontally
+	else {
+		if (Get_String_from_sets(x-1, y) == "" && Get_String_from_sets(x+1, y) == "") {
+			cell_tab[y][x].setStatus(Drawed);
+			cell_tab[y][x+1].setStatus(Drawed);
+			cell_tab[y][x-1].setStatus(Drawed);
+
+			lastset += 1;
+			sets_tab[y][x].setString(to_string(lastset));
+			sets_tab[y][x+1].setString(to_string(lastset));
+			sets_tab[y][x-1].setString(to_string(lastset));
+		}
+
+		else if (Get_String_from_sets(x-1, y) == "" || Get_String_from_sets(x+1, y) == ""){
+			cell_tab[y][x].setStatus(Drawed);
+			cell_tab[y][x-1].setStatus(Drawed);
+			cell_tab[y][x+1].setStatus(Drawed);
+
+			string str;
+			if (Get_String_from_sets(x+1, y) == "") {
+				str = Get_String_from_sets(x-1, y);
+			}
+			else {
+				str = Get_String_from_sets(x+1, y);
+			}
+
+			sets_tab[y][x].setString(str);
+			sets_tab[y][x-1].setString(str);
+			sets_tab[y][x+1].setString(str);
+		}
+
+		else if (Get_String_from_sets(x-1, y) != Get_String_from_sets(x+1, y)){
+			string winner = (stoi(Get_String_from_sets(x-1, y)) < stoi(Get_String_from_sets(x+1, y)) ? Get_String_from_sets(x-1, y) : Get_String_from_sets(x+1, y));
+
+			sets_tab[y][x].setString("*");
+			cell_tab[y][x].setStatus(Drawed);
+
+			Recursion_Changing_set(x, y, winner);
+		}
+		
+	}
+}
+
+bool Board::Should_end_generating_Kruskal() {
+	string set = Get_String_from_sets(1, 1);
+	for (int y = 0;y < board_height;y++) {
+		for (int x = 0;x < board_width;x++) {
+			if (y % 2 == 1 && x % 2 == 1) {
+				if (Get_String_from_sets(x, y) == "" || Get_String_from_sets(x,y) != set) {
+					return false;
+				}
+			}
+		}
+	}
+	generating = false;
+	return true;
+	
+}
+
+void Board::Recursion_Changing_set(int x, int y, string winner) {
+	if (Get_String_from_sets(x, y) != "" && Get_String_from_sets(x, y) != winner) {
+		sets_tab[y][x].setString(winner);
+
+		if (x - 1 > 0) {
+			if (Get_String_from_sets(x - 1, y) != "" && Get_String_from_sets(x - 1, y) != winner) {
+				Recursion_Changing_set(x - 1, y, winner);
+			}
+		}
+		if (x + 1 < board_width) {
+			if (Get_String_from_sets(x + 1, y) != "" && Get_String_from_sets(x + 1, y) != winner) {
+				Recursion_Changing_set(x + 1, y, winner);
+			}
+		}
+		if (y - 1 > 0) {
+			if (Get_String_from_sets(x, y - 1) != "" && Get_String_from_sets(x, y - 1) != winner) {
+				Recursion_Changing_set(x, y - 1, winner);
+			}
+		}
+		if (y + 1 < board_height) {
+			if (Get_String_from_sets(x, y + 1) != "" && Get_String_from_sets(x, y + 1) != winner) {
+				Recursion_Changing_set(x, y + 1, winner);
+			}
+		}
+	}
+}
