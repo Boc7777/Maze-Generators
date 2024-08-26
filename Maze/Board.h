@@ -20,18 +20,17 @@ public:
 	Board(float cell_size, int board_width, int board_height, RenderWindow* window);
 	
 	void DrawBoard();
-	//Kruskal Sets
+	//Kruskal && Eller Sets
 	void DrawSets();
 
-
 	bool getGeneratingStatus();
-
 
 	void Prim_CreateMaze(int cells_in_iteration);
 	void Hunt_and_Kill_CreateMaze();
 	void Recursive_Backtracking_CreateMaze();
 	void Wilson_CreateMaze();
 	void Kruskal_CreateMaze();
+	void Eller_CreateMaze();
 	
 
 private:
@@ -57,13 +56,19 @@ private:
 		void ClearNeighbour();
 
 	//Kruskal
-		void Build_Sets_tab();
 		void Build_Bridge_Kruskal(int x,int y);
-		string Get_String_from_sets(int x,int y);
 		bool Should_end_generating_Kruskal();
 		void Recursion_Changing_set(int x, int y, string winner);
 
+	//Kruskal && Eller
+		void Build_Sets_tab();
+		string Get_String_from_sets(int x, int y);
 
+	//Eller
+		void Fill_Line(int y);
+		void Mix_Line(int y);
+		void Drop_Line(int y);
+		
 
 	vector<vector<Cell>> cell_tab;
 	vector<Cell*> neighbours_cells;
@@ -83,12 +88,17 @@ private:
 	pair<int,int> tail_wil = make_pair(-1,-1);
 	bool HeadFoundMaze = false;
 
-
 	//Kruskal
-	Font font;
-	vector<vector<Text>> sets_tab;
 	vector<Cell*> walls_tab;
 	int lastset = 0;
+
+	//Kruskal && Eller
+	Font font;
+	vector<vector<Text>> sets_tab;
+
+	//Eller
+	int current_y = 1;
+	int lastset_e = 1;
 	
 
 

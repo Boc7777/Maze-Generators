@@ -18,7 +18,7 @@ Board::Board(float cell_size, int board_width, int board_height, RenderWindow* w
 	this->board_height = board_height;
 	this->window = window;
 
-	font.loadFromFile("czcionka.ttf");
+	font.loadFromFile("C:\\Users\\48664\\Desktop\\Maze\\Maze\\czcionka.ttf");
 	
 	for (int y = 0;y < board_height;y++) {
 		vector<Cell> row;
@@ -54,6 +54,8 @@ void Board::DrawBoard() {
 bool Board::getGeneratingStatus() {
 	return generating;
 }
+
+
 
 
 //universal functions 
@@ -558,56 +560,6 @@ void Board::Kruskal_CreateMaze() {
 	
 }
 
-string Board::Get_String_from_sets(int x, int y) {
-	return sets_tab[y][x].getString().toAnsiString();
-}
-
-void Board::DrawSets() {
-	for (auto& set_row : sets_tab) {
-		for (auto& set : set_row) {
-			set.setOrigin(set.getLocalBounds().width / 2, set.getLocalBounds().height / 2);
-			window->draw(set);
-		}
-	}
-}
-
-void Board::Build_Sets_tab() {
-	//creating sets_tab  = empty texts
-	for (int y = 0;y < board_height;y++) {
-		vector<Text> row;
-		for (int x = 0;x < board_width;x++) {
-			Text text;
-			text.setFont(font);
-			text.setCharacterSize(cell_size / 2);
-			text.setFillColor(Color::Red);
-			text.setPosition(Vector2f(x * cell_size + (0.5 * cell_size), y * cell_size + (0.5 * cell_size)));
-
-			text.setString("");
-			row.push_back(text);
-		}
-		sets_tab.push_back(row);
-	}
-
-	//create list of all walls
-	int a=0; 
-	int b=0;
-	if (board_width % 2 == 1) {
-		a = 1;
-	}
-	if (board_height % 2 == 1) {
-		b = 1;
-	}
-
-	for (int y = 0; y < board_height;y++) {
-		for (int x = 0;x < board_width;x++) {
-			if (((x % 2 == 0 && y % 2 == 1) || (x % 2 == 1 && y % 2 == 0)) && x > 0 && x < board_width-a && y>0 && y < board_height-b) {
-				walls_tab.push_back(&cell_tab[y][x]);
-			}
-		}
-	}
-	
-}
-
 void Board::Build_Bridge_Kruskal(int x, int y) {
 	//vertically
 	if (y % 2 == 0) {
@@ -734,5 +686,177 @@ void Board::Recursion_Changing_set(int x, int y, string winner) {
 				Recursion_Changing_set(x, y + 1, winner);
 			}
 		}
+	}
+}
+
+
+
+
+//Kruskal && Eller Sets
+void Board::DrawSets() {
+	if (generating) {
+		for (auto& set_row : sets_tab) {
+			for (auto& set : set_row) {
+				set.setOrigin(set.getLocalBounds().width / 2, set.getLocalBounds().height / 2);
+				window->draw(set);
+			}
+		}
+	}
+}
+
+void Board::Build_Sets_tab() {
+	//creating sets_tab  = empty texts
+	for (int y = 0;y < board_height;y++) {
+		vector<Text> row;
+		for (int x = 0;x < board_width;x++) {
+			Text text;
+			text.setFont(font);
+			text.setCharacterSize(cell_size / 1.4f);
+			text.setFillColor(Color::Red);
+			text.setPosition(Vector2f(x * cell_size + (0.5 * cell_size), y * cell_size + (0.5 * cell_size)));
+
+			text.setString("");
+			row.push_back(text);
+		}
+		sets_tab.push_back(row);
+	}
+
+	//create list of all walls
+	int a = 0;
+	int b = 0;
+	if (board_width % 2 == 1) {
+		a = 1;
+	}
+	if (board_height % 2 == 1) {
+		b = 1;
+	}
+
+	for (int y = 0; y < board_height;y++) {
+		for (int x = 0;x < board_width;x++) {
+			if (((x % 2 == 0 && y % 2 == 1) || (x % 2 == 1 && y % 2 == 0)) && x > 0 && x < board_width - a && y>0 && y < board_height - b) {
+				walls_tab.push_back(&cell_tab[y][x]);
+			}
+		}
+	}
+
+}
+
+string Board::Get_String_from_sets(int x, int y) {
+	return sets_tab[y][x].getString().toAnsiString();
+}
+
+
+
+
+//Eller 
+void Board::Eller_CreateMaze() {
+	if(current_y < board_height-2) {
+		Fill_Line(current_y);
+		Mix_Line(current_y);
+		Drop_Line(current_y);
+	}
+	//end
+	else if (current_y == board_height - 1 || current_y == board_height - 2) {
+		Fill_Line(current_y);
+		for (int x = 0; x < board_width;x++) {
+			if (x % 2 == 0 && x > 0 && x < board_width - 2) {
+				if (Get_String_from_sets(x - 1, current_y) != Get_String_from_sets(x + 1, current_y)) {
+					cell_tab[current_y][x].setStatus(Drawed);
+				}
+			}
+		}
+
+		generating = false;
+	}
+	current_y += 2;
+}
+
+void Board::Fill_Line(int y) {
+	for (int x = 0; x < board_width;x++) {
+		if (cell_tab[y][x].getStatus() == Other && x % 2 == 1) {
+
+			cell_tab[y][x].setStatus(Drawed);
+			sets_tab[y][x].setString(to_string(lastset_e));
+			lastset_e++;
+		}
+	}
+}
+
+void Board::Mix_Line(int y){
+	for (int x = 0; x < board_width;x++) {
+		if (x % 2 == 0 && x>0 && x<board_width-1) {
+			if (Get_String_from_sets(x - 1, y) != Get_String_from_sets(x + 1, y)) {
+				int good = true;
+				if (y > 1) {
+					if (Get_String_from_sets(x - 1, y - 1) == Get_String_from_sets(x + 1, y - 1) && Get_String_from_sets(x + 1, y - 1) != "") {
+						good = false;
+					}
+				}
+
+				if (good) {
+					int random = rand() % 3;
+					if (random == 1) {
+						cell_tab[y][x].setStatus(Drawed);
+						string winner = Get_String_from_sets(x - 1, y);
+						sets_tab[y][x].setString(winner);
+
+						int a = x + 1;
+
+						while (a < board_width && cell_tab[y][a].getStatus() == Drawed) {
+							sets_tab[y][a].setString(winner);
+							a++;
+						}
+
+
+					}
+					else if (random == 2) {
+						cell_tab[y][x].setStatus(Drawed);
+						string winner = Get_String_from_sets(x + 1, y);
+						sets_tab[y][x].setString(winner);
+
+						int a = x - 1;
+						while (cell_tab[y][a].getStatus() == Drawed && a > 0) {
+							sets_tab[y][a].setString(winner);
+							a--;
+						}
+					}
+				}
+
+
+			}
+		}
+	}
+}
+
+void Board::Drop_Line(int y) {
+	int random_amount;
+	for (int x = 1; x < board_width; x+=2) {
+			int lenght = 1;
+			int a = x+2;
+
+			while (a<board_width && Get_String_from_sets(a-1,y)!="") {
+				lenght++;
+				a += 2;
+			}
+			if (lenght > 3) {
+				lenght--;
+			}
+			if (lenght > 4) {
+				lenght--;
+			}
+			random_amount = 1 + ((rand() % lenght) + 1)/3;
+
+
+			for (int b = 0; b < random_amount;b+=1) {
+				int random_place = rand() % lenght;
+				cell_tab[y+1][x + random_place*2].setStatus(Drawed);
+				cell_tab[y+2][x + random_place*2].setStatus(Drawed);
+				sets_tab[y+1][x + random_place*2].setString(Get_String_from_sets(x, y));
+				sets_tab[y+2][x + random_place*2].setString(Get_String_from_sets(x, y));
+			}
+
+			x += (lenght-1)*2;
+			
+		
 	}
 }
