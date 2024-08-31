@@ -177,7 +177,6 @@ void Board::Draw_Random_Cell() {
 
 //Prim
 void Board::Prim_CreateMaze(int cells_in_iteration) {
-
 	Refresh_Neighbour_Cells();
 	vector<int> random_tab;
 	for (int i = 0;i < cells_in_iteration;i++) {
@@ -216,6 +215,7 @@ void Board::Prim_CreateMaze(int cells_in_iteration) {
 	if (neighbours_cells.size() == 0) {
 		generating = false;
 	}
+	
 }
 
 void Board::Refresh_Neighbour_Cells() {
@@ -242,41 +242,46 @@ void Board::Refresh_Neighbour_Cells() {
 
 //Hunt and Kill
 void Board::Hunt_and_Kill_CreateMaze() {
+	
 	int cell_x = head_hak->getCoords().first;
 	int cell_y = head_hak->getCoords().second;
+	
 	vector<Direction> Dir_tab = Check_Space_around(cell_x, cell_y);
 
 	if (Dir_tab.size() > 0) {
 		int randomDir = rand() % Dir_tab.size();
 		Direction Choosen_Dir = Dir_tab[randomDir];
 
-		
+		cell_tab[head_hak->getCoords().second][head_hak->getCoords().first].setStatus(Drawed);
 		Build_Bridge(cell_x, cell_y, Choosen_Dir);
+		cell_tab[head_hak->getCoords().second][head_hak->getCoords().first].setStatus(Head);
+		
 	}
 	else {
 		Find_Head();
 	}
+	
 }
 
 void Board::Find_Head() {
+	cell_tab[head_hak->getCoords().second][head_hak->getCoords().first].setStatus(Drawed);
 	bool found = false;
 	for (auto& cell_row : cell_tab) {
 		for (auto& cell : cell_row) {
 			if (!found) {
 				int cell_x = cell.getCoords().first;
 				int cell_y = cell.getCoords().second;
-				vector<Direction> Dir_tab = Check_Drawed_Around(cell_x, cell_y);
-				if (Dir_tab.size() > 0 && cell_x % 2 == 1 && cell_y % 2 == 1 && cell_tab[cell_y][cell_x].getStatus() == Other) {
+				vector<Direction> Dir_tab = Check_Space_around(cell_x, cell_y);
+				if (Dir_tab.size() > 0 && cell_x % 2 == 1 && cell_y % 2 == 1 && cell_tab[cell_y][cell_x].getStatus() == Drawed) {
 
 					/*cell_tab[cell_y][cell_x].setStatus(Drawed);*/
-
-					Update_Head(&cell);
 
 					//connect to main branch
 					int randomDir = rand() % Dir_tab.size();
 					Direction Choosen_Dir = Dir_tab[randomDir];
 
 					Build_Bridge(cell_x, cell_y, Choosen_Dir);
+					cell_tab[head_hak->getCoords().second][head_hak->getCoords().first].setStatus(Head);
 
 					found = true;
 				}
@@ -291,8 +296,9 @@ void Board::Find_Head() {
 
 
 
-//Recursive Backtracking
-void Board::Recursive_Backtracking_CreateMaze() {
+//Depth-First search
+void Board::Depth_First_search_CreateMaze() {
+	
 	int cell_x = head_hak->getCoords().first;
 	int cell_y = head_hak->getCoords().second;
 	vector<Direction> Dir_tab = Check_Space_around(cell_x, cell_y);
@@ -300,9 +306,9 @@ void Board::Recursive_Backtracking_CreateMaze() {
 	if (Dir_tab.size() > 0) {
 		int randomDir = rand() % Dir_tab.size();
 		Direction Choosen_Dir = Dir_tab[randomDir];
-		
 
-	
+
+
 		if (Choosen_Dir == Left) {
 			cell_tab[cell_y][cell_x - 1].setStatus(Neighbour);
 			cell_tab[cell_y][cell_x - 2].setStatus(Neighbour);
@@ -340,7 +346,7 @@ void Board::Recursive_Backtracking_CreateMaze() {
 			Update_Head(&cell_tab[cell_y + 2][cell_x]);
 		}
 
-		
+
 	}
 
 	else {
@@ -366,6 +372,7 @@ void Board::Recursive_Backtracking_CreateMaze() {
 		}
 
 	}
+	
 }
 
 
@@ -374,12 +381,13 @@ void Board::Recursive_Backtracking_CreateMaze() {
 //Wilson
 void Board::Wilson_CreateMaze() {
 	//is empty
-	if (!HeadFoundMaze){
+	
+	if (!HeadFoundMaze) {
 		Random_Path_Generate();
 
 	}
-	else{
-		
+	else {
+
 
 		Direction Dir_tail = Directions_Map[tail_wil.second][tail_wil.first];
 		int tail_x = tail_wil.first;
@@ -401,15 +409,16 @@ void Board::Wilson_CreateMaze() {
 			tail_wil = make_pair(tail_x + 2, tail_y);
 		}
 		else if (Dir_tail == Top) {
-			tail_wil = make_pair(tail_x, tail_y-2);
+			tail_wil = make_pair(tail_x, tail_y - 2);
 		}
 		else if (Dir_tail == Bottom) {
-			tail_wil = make_pair(tail_x , tail_y+2);
+			tail_wil = make_pair(tail_x, tail_y + 2);
 		}
-		
-	
-	
+
+
+
 	}
+	
 }
 
 void Board::Random_Path_Generate() {
@@ -546,6 +555,7 @@ void Board::ClearNeighbour() {
 
 //Kruskal
 void Board::Kruskal_CreateMaze() {
+	
 	if (walls_tab.size() > 0) {
 		int random = rand() % walls_tab.size();
 
@@ -557,6 +567,7 @@ void Board::Kruskal_CreateMaze() {
 		walls_tab.erase(walls_tab.begin() + random);
 	}
 	Should_end_generating_Kruskal();
+	
 	
 }
 
@@ -750,7 +761,8 @@ string Board::Get_String_from_sets(int x, int y) {
 
 //Eller 
 void Board::Eller_CreateMaze() {
-	if(current_y < board_height-2) {
+	
+	if (current_y < board_height - 2) {
 		Fill_Line(current_y);
 		Mix_Line(current_y);
 		Drop_Line(current_y);
@@ -769,6 +781,7 @@ void Board::Eller_CreateMaze() {
 		generating = false;
 	}
 	current_y += 2;
+	
 }
 
 void Board::Fill_Line(int y) {
@@ -794,8 +807,8 @@ void Board::Mix_Line(int y){
 				}
 
 				if (good) {
-					int random = rand() % 3;
-					if (random == 1) {
+					int random = rand() % 100;
+					if (random < 32) {
 						cell_tab[y][x].setStatus(Drawed);
 						string winner = Get_String_from_sets(x - 1, y);
 						sets_tab[y][x].setString(winner);
@@ -809,7 +822,7 @@ void Board::Mix_Line(int y){
 
 
 					}
-					else if (random == 2) {
+					else if (random <64) {
 						cell_tab[y][x].setStatus(Drawed);
 						string winner = Get_String_from_sets(x + 1, y);
 						sets_tab[y][x].setString(winner);
@@ -844,7 +857,7 @@ void Board::Drop_Line(int y) {
 			if (lenght > 4) {
 				lenght--;
 			}
-			random_amount = 1 + ((rand() % lenght) + 1)/3;
+			random_amount = 1 + ((rand() % lenght)/6);
 
 
 			for (int b = 0; b < random_amount;b+=1) {

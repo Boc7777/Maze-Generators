@@ -27,7 +27,7 @@ public:
 
 	void Prim_CreateMaze(int cells_in_iteration);
 	void Hunt_and_Kill_CreateMaze();
-	void Recursive_Backtracking_CreateMaze();
+	void Depth_First_search_CreateMaze();
 	void Wilson_CreateMaze();
 	void Kruskal_CreateMaze();
 	void Eller_CreateMaze();
